@@ -1,0 +1,93 @@
+Diet_type,Cuisine_type,Recipe_count
+dash,american,639
+dash,world,234
+dash,mediterranean,176
+dash,italian,165
+dash,french,150
+dash,british,64
+dash,mexican,61
+dash,south american,54
+dash,chinese,38
+dash,nordic,32
+dash,south east asian,31
+dash,asian,24
+dash,middle eastern,21
+dash,indian,20
+dash,eastern europe,10
+dash,central europe,9
+dash,japanese,9
+dash,kosher,5
+dash,caribbean,3
+keto,american,663
+keto,italian,234
+keto,french,163
+keto,british,90
+keto,mediterranean,89
+keto,mexican,60
+keto,chinese,38
+keto,nordic,35
+keto,south east asian,34
+keto,south american,21
+keto,middle eastern,17
+keto,indian,12
+keto,asian,11
+keto,central europe,11
+keto,eastern europe,11
+keto,japanese,10
+keto,caribbean,7
+keto,world,6
+mediterranean,mediterranean,1274
+mediterranean,italian,148
+mediterranean,american,145
+mediterranean,french,61
+mediterranean,nordic,31
+mediterranean,middle eastern,26
+mediterranean,mexican,17
+mediterranean,asian,12
+mediterranean,south american,10
+mediterranean,south east asian,8
+mediterranean,world,6
+mediterranean,british,4
+mediterranean,eastern europe,3
+mediterranean,indian,3
+mediterranean,japanese,2
+mediterranean,caribbean,1
+mediterranean,central europe,1
+mediterranean,chinese,1
+paleo,american,535
+paleo,italian,171
+paleo,french,154
+paleo,mediterranean,106
+paleo,british,54
+paleo,mexican,48
+paleo,nordic,45
+paleo,south east asian,29
+paleo,eastern europe,27
+paleo,chinese,26
+paleo,south american,21
+paleo,asian,12
+paleo,middle eastern,12
+paleo,central europe,9
+paleo,indian,9
+paleo,caribbean,6
+paleo,japanese,5
+paleo,world,3
+paleo,kosher,2
+vegan,american,925
+vegan,mediterranean,99
+vegan,italian,81
+vegan,french,76
+vegan,asian,67
+vegan,indian,48
+vegan,south east asian,46
+vegan,mexican,38
+vegan,south american,31
+vegan,british,27
+vegan,japanese,24
+vegan,chinese,17
+vegan,middle eastern,15
+vegan,world,10
+vegan,nordic,9
+vegan,central europe,4
+vegan,eastern europe,4
+vegan,caribbean,1
