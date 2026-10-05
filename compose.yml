@@ -1,0 +1,7 @@
+services:
+  csv-processor:
+    build: .
+    container_name: python_csv_processor
+    volumes:
+      - ./data:/app/data
+    command: ["python", "data_analysis.py"]

@@ -1,0 +1,32 @@
+{
+    "paleo": {
+        "average_protein_g": 88.67,
+        "average_carbs_g": 129.55,
+        "average_fat_g": 135.67,
+        "recipe_count": 1274
+    },
+    "vegan": {
+        "average_protein_g": 56.16,
+        "average_carbs_g": 254.0,
+        "average_fat_g": 103.3,
+        "recipe_count": 1522
+    },
+    "keto": {
+        "average_protein_g": 101.27,
+        "average_carbs_g": 57.97,
+        "average_fat_g": 153.12,
+        "recipe_count": 1512
+    },
+    "mediterranean": {
+        "average_protein_g": 101.11,
+        "average_carbs_g": 152.91,
+        "average_fat_g": 101.42,
+        "recipe_count": 1753
+    },
+    "dash": {
+        "average_protein_g": 69.28,
+        "average_carbs_g": 160.54,
+        "average_fat_g": 101.15,
+        "recipe_count": 1745
+    }
+}

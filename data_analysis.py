@@ -9,8 +9,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+pd.set_option('display.width', 1000)
+pd.set_option('display.colheader_justify', 'center')
+pd.set_option('display.max_columns', None)
+pd.set_option('display.precision', 2)
 
-INPUT_FILE = Path("All_Diets.csv")
+INPUT_FILE = Path("data/All_Diets.csv")
 OUTPUT_DIR = Path("outputs")
 
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -148,7 +152,38 @@ def main():
     ]
 
     print("\nTop five protein-rich recipes by diet type:")
-    print(top_protein[top_protein_columns].to_string(index=False))
+    
+    # 1. Select and copy the target columns
+    display_df = top_protein[top_protein_columns].copy()
+    
+    # 2. Shorten ultra-long recipe names so they don't push columns off-screen
+    display_df["Recipe_name"] = display_df["Recipe_name"].apply(
+        lambda x: x[:30] + "..." if len(str(x)) > 33 else str(x)
+    )
+    
+    # 3. Round the numeric values directly
+    display_df["Protein_g"] = display_df["Protein_g"].round(1)
+    display_df["Carbs_g"] = display_df["Carbs_g"].round(1)
+    display_df["Fat_g"] = display_df["Fat_g"].round(1)
+    display_df["Protein_to_Carbs_ratio"] = display_df["Protein_to_Carbs_ratio"].round(2)
+    display_df["Carbs_to_Fat_ratio"] = display_df["Carbs_to_Fat_ratio"].round(2)
+    
+    # 4. Print clean headers using fixed spacings
+    print(f"{'Diet Type':<15} | {'Recipe Name':<35} | {'Cuisine':<13} | {'Prot(g)':>7} | {'Carb(g)':>7} | {'Fat(g)':>7} | {'P:C':>6} | {'C:F':>6}")
+    print("-" * 115)
+    
+    # 5. Loop and print cleanly formatted individual rows
+    for _, row in display_df.iterrows():
+        print(
+            f"{str(row['Diet_type']):<15} | "
+            f"{str(row['Recipe_name']):<35} | "
+            f"{str(row['Cuisine_type']):<13} | "
+            f"{row['Protein_g']:>7.1f} | "
+            f"{row['Carbs_g']:>7.1f} | "
+            f"{row['Fat_g']:>7.1f} | "
+            f"{row['Protein_to_Carbs_ratio']:>6.2f} | "
+            f"{row['Carbs_to_Fat_ratio']:>6.2f}"
+        )
 
     top_protein[top_protein_columns].to_csv(
         OUTPUT_DIR / "top_5_protein_recipes_by_diet.csv",
