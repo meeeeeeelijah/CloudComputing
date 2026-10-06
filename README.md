@@ -1,37 +1,47 @@
-# Cloud-Native Nutritional Insights
+## Current project status
 
-A Python data-analysis application for the Cloud-Native Nutritional Insights project. The application analyzes the `All_Diets.csv` recipe dataset and calculates nutritional insights by diet type and cuisine.
-
-## Current scope
-
-This repository currently implements **Task 1: Dataset Analysis and Insights**.
-
-The analysis:
-
-- Cleans missing and invalid nutritional values.
-- Calculates average protein, carbohydrates, and fat by diet type.
-- Identifies the five most protein-rich recipes for each diet type.
-- Identifies the diet type with the highest average protein content.
-- Finds the most common cuisine for each diet type.
-- Calculates protein-to-carbohydrate and carbohydrate-to-fat ratios.
-- Generates bar charts, heatmaps, and scatter plots.
-
-Tasks involving Docker, serverless processing, and CI/CD will be added as the project progresses.
+Tasks 1–3 are implemented. Task 4 covers the GitHub Actions CI/CD pipeline, and Task 5 covers enhancement research and implementation. These will be documented when completed.
 
 ## Requirements
 
-- Python 3.10 or later
-- Pandas
+### Task 1 and Task 2
+
+- Python 3.9 or later
+- Docker Desktop
+- Docker Compose
+- pandas
 - Matplotlib
 - Seaborn
+
+The Dockerfile installs the Python packages required to run the data analysis application.
+
+### Task 3
+
+- Azure Functions Core Tools
+- Azurite
+- Azure Storage Blob SDK
+- Azure Functions Python library
+
+Azure and serverless dependencies are listed in `requirements.txt`.
 
 ## Project structure
 
 ```text
 .
-├── All_Diets.csv
-├── data_analysis.py
-├── requirements.txt
+├── data/
+│   └── All_Diets.csv
 ├── outputs/
+│   ├── CSV analysis results
+│   └── PNG visualizations
+├── serverless/
+│   ├── upload_data.py
+│   └── database/
+│       └── diet_results.json
+├── data_analysis.py
+├── function_app.py
+├── Dockerfile
+├── compose.yml
+├── host.json
+├── requirements.txt
 ├── README.md
 └── .gitignore
