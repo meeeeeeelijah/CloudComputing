@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nutritional Insights Dashboard</title>
+
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Nutritional Insights</h1>
+        <p>Cloud-based diet and nutrition analysis dashboard</p>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Explore Nutritional Insights</h2>
+            <p>
+                Compare average macronutrients and recipe counts across different diet
+                types.
+            </p>
+        </section>
+
+        <section class="metadata-grid">
+            <div class="metadata-card">
+                <span>Function Execution Time</span>
+                <strong id="executionTime">--</strong>
+            </div>
+
+            <div class="metadata-card">
+                <span>Diet Types</span>
+                <strong id="dietCount">0</strong>
+            </div>
+
+            <div class="metadata-card">
+                <span>Total Recipes</span>
+                <strong id="recipeCount">0</strong>
+            </div>
+        </section>
+
+        <section class="controls-section">
+            <h2>Filters and Data Interaction</h2>
+
+            <div class="controls">
+                <input id="searchInput" type="search" placeholder="Search by diet type" />
+
+                <select id="dietFilter">
+                    <option value="all">All Diet Types</option>
+                </select>
+
+                <button id="applyFilterButton" class="purple-button">
+                    Apply Filter
+                </button>
+
+                <button id="clearFilterButton" class="gray-button">
+                    Clear
+                </button>
+
+                <button id="refreshButton" class="green-button">
+                    Refresh Data
+                </button>
+            </div>
+        </section>
+
+        <section class="charts-section">
+            <h2>Visualizations</h2>
+
+            <div class="chart-grid">
+                <article class="chart-card">
+                    <h3>Average Macronutrients</h3>
+                    <p>Average protein, carbohydrates, and fat by diet type.</p>
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </article>
+
+                <article class="chart-card">
+                    <h3>Recipe Counts</h3>
+                    <p>Total number of recipes for each diet type.</p>
+                    <div class="chart-container">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </article>
+
+                <article class="chart-card">
+                    <h3>Recipe Distribution</h3>
+                    <p>Percentage distribution of recipes by diet type.</p>
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="results-section">
+            <h2>Diet Summary</h2>
+
+            <p id="statusMessage" class="status-message">
+                Loading sample dashboard data...
+            </p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Diet Type</th>
+                            <th>Protein (g)</th>
+                            <th>Carbohydrates (g)</th>
+                            <th>Fat (g)</th>
+                            <th>Recipe Count</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="resultsTable"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Cloud Dashboard Project - Phase 2</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
