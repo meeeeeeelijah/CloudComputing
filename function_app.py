@@ -2,11 +2,23 @@ import csv
 import io
 import json
 import os
+import time
+from datetime import datetime, timezone
 
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient
 
 app = func.FunctionApp()
+
+REQUIRED_SETTINGS = ("BLOB_CONNECTION_STRING", "BLOB_CONTAINER", "BLOB_NAME")
+
+
+def json_response(body, status_code=200):
+    return func.HttpResponse(
+        json.dumps(body, indent=4),
+        status_code=status_code,
+        mimetype="application/json"
+    )
 
 
 @app.route(
@@ -15,99 +27,94 @@ app = func.FunctionApp()
     auth_level=func.AuthLevel.ANONYMOUS
 )
 def process_diet_data(req: func.HttpRequest) -> func.HttpResponse:
+    start = time.perf_counter()
+
+    missing = [name for name in REQUIRED_SETTINGS if not os.environ.get(name)]
+    if missing:
+        return json_response(
+            {"error": f"Missing app settings: {', '.join(missing)}"},
+            500
+        )
+
     try:
         connection_string = os.environ["BLOB_CONNECTION_STRING"]
         container_name = os.environ["BLOB_CONTAINER"]
         blob_name = os.environ["BLOB_NAME"]
+        results_blob_name = os.environ.get(
+            "RESULTS_BLOB_NAME", "results/diet_results.json"
+        )
 
-        # Connect to Azurite
         blob_service_client = BlobServiceClient.from_connection_string(
             connection_string
         )
-
-        blob_client = blob_service_client.get_blob_client(
-            container=container_name,
-            blob=blob_name
+        container_client = blob_service_client.get_container_client(
+            container_name
         )
 
-        # Download CSV from Azurite
-        csv_data = blob_client.download_blob().readall().decode("utf-8")
+        # Download the dataset from Azure Blob Storage
+        csv_data = (
+            container_client.get_blob_client(blob_name)
+            .download_blob()
+            .readall()
+            .decode("utf-8-sig")
+        )
 
-        # Read CSV
-        reader = csv.DictReader(io.StringIO(csv_data))
-
-        # Store nutritional values by diet type
         diet_data = {}
+        skipped_rows = 0
 
-        for row in reader:
-            diet_type = row["Diet_type"]
+        for row in csv.DictReader(io.StringIO(csv_data)):
+            try:
+                diet_type = row["Diet_type"].strip().lower()
+                protein = float(row["Protein(g)"])
+                carbs = float(row["Carbs(g)"])
+                fat = float(row["Fat(g)"])
+            except (KeyError, TypeError, ValueError, AttributeError):
+                skipped_rows += 1
+                continue
 
-            protein = float(row["Protein(g)"])
-            carbs = float(row["Carbs(g)"])
-            fat = float(row["Fat(g)"])
+            if not diet_type:
+                skipped_rows += 1
+                continue
 
-            if diet_type not in diet_data:
-                diet_data[diet_type] = {
-                    "protein": [],
-                    "carbs": [],
-                    "fat": []
-                }
+            values = diet_data.setdefault(
+                diet_type, {"protein": [], "carbs": [], "fat": []}
+            )
+            values["protein"].append(protein)
+            values["carbs"].append(carbs)
+            values["fat"].append(fat)
 
-            diet_data[diet_type]["protein"].append(protein)
-            diet_data[diet_type]["carbs"].append(carbs)
-            diet_data[diet_type]["fat"].append(fat)
-
-        # Calculate averages
         results = {}
 
         for diet_type, values in diet_data.items():
+            count = len(values["protein"])
             results[diet_type] = {
-                "average_protein_g": round(
-                    sum(values["protein"]) / len(values["protein"]),
-                    2
-                ),
-                "average_carbs_g": round(
-                    sum(values["carbs"]) / len(values["carbs"]),
-                    2
-                ),
-                "average_fat_g": round(
-                    sum(values["fat"]) / len(values["fat"]),
-                    2
-                ),
-                "recipe_count": len(values["protein"])
+                "average_protein_g": round(sum(values["protein"]) / count, 2),
+                "average_carbs_g": round(sum(values["carbs"]) / count, 2),
+                "average_fat_g": round(sum(values["fat"]) / count, 2),
+                "recipe_count": count
             }
 
-        # Save results as simulated NoSQL database
-        project_root = os.path.dirname(os.path.abspath(__file__))
+        # Save results back to Blob Storage (replaces the Phase 1 local JSON file)
+        results_saved = True
+        try:
+            container_client.get_blob_client(results_blob_name).upload_blob(
+                json.dumps(results, indent=4),
+                overwrite=True
+            )
+        except Exception:
+            results_saved = False
 
-        output_dir = os.path.join(
-            project_root,
-            "serverless",
-            "database"
-        )
+        metadata = {
+            "execution_time_ms": round((time.perf_counter() - start) * 1000, 2),
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "source_blob": f"{container_name}/{blob_name}",
+            "results_blob": f"{container_name}/{results_blob_name}" if results_saved else None,
+            "diet_count": len(results),
+            "total_recipes": sum(item["recipe_count"] for item in results.values()),
+            "skipped_rows": skipped_rows
+        }
 
-        os.makedirs(output_dir, exist_ok=True)
-
-        output_path = os.path.join(
-            output_dir,
-            "diet_results.json"
-        )
-
-        with open(output_path, "w") as output_file:
-            json.dump(results, output_file, indent=4)
-
-        # Return results
-        return func.HttpResponse(
-            json.dumps(results, indent=4),
-            status_code=200,
-            mimetype="application/json"
-        )
+        return json_response({"results": results, "metadata": metadata})
 
     except Exception as e:
-        return func.HttpResponse(
-            json.dumps({
-                "error": str(e)
-            }),
-            status_code=500,
-            mimetype="application/json"
-        )
+        return json_response({"error": str(e)}, 500)

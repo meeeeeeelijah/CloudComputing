@@ -45,3 +45,13 @@ Azure and serverless dependencies are listed in `requirements.txt`.
 ├── requirements.txt
 ├── README.md
 └── .gitignore
+
+## Phase 2 - Azure backend
+
+Deploy everything to Azure (resource group, storage, dataset upload, Function App, settings, CORS, code):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\deploy-azure.ps1
+```
+
+The deployed function URL is saved to `azure-deployment.json`. Setup details: `docs/AZURE_BACKEND.md`.

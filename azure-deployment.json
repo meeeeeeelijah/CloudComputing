@@ -1,0 +1,12 @@
+{
+    "suffix":  "6q470d",
+    "subscription":  "Azure for Students",
+    "resourceGroup":  "diet-analysis-rg",
+    "location":  "westus2",
+    "storageAccount":  "dietdata6q470d",
+    "blobContainer":  "diet-data",
+    "datasetBlob":  "All_Diets.csv",
+    "functionApp":  "diet-analysis-func-6q470d",
+    "functionUrl":  "https://diet-analysis-func-6q470d.azurewebsites.net/api/process-diet-data",
+    "lastDeployedUtc":  "2026-11-06T23:11:02.3197914Z"
+}
