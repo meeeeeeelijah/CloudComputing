@@ -5,7 +5,7 @@
   https://your-function-app.azurewebsites.net/api/process-diet-data
 */
 const API_ENDPOINT =
-  "https://YOUR-FUNCTION-APP.azurewebsites.net/api/process-diet-data";
+  "https://diet-analysis-func-6q470d.azurewebsites.net/api/process-diet-data";
 
 let allResults = {};
 let filteredResults = {};
